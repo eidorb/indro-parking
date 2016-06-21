@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Scan barcode</title>
+    <style>
+      .container {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <svg id="barcode"></svg>
+    </div>
+
+    <script src="JsBarcode.code39.min.js"></script>
+    <script>
+      var barcodeElement = document.getElementById('barcode'),
+        barcodeString = dateComponent() + transactionComponent();
+
+      JsBarcode(barcodeElement, barcodeString);
+
+      // Add asterisks to make it look more authentic.
+      barcodeElement.querySelector('text').textContent = '*' + barcodeString + '*';
+
+
+      /**
+       * Return a string representing the date component of the barcode.
+       *
+       * The date is in the form YYYYMMDD.
+       */
+      function dateComponent() {
+        var now = new Date(),
+          year = now.getFullYear(),
+          month = ('0' + (now.getMonth() + 1)).slice(-2),
+          date = ('0' + now.getDate()).slice(-2);
+
+        return year + month + date;
+      }
+
+
+      /**
+       * Return a string representing the transaction component of the barcode.
+       *
+       * Comprises of 7 random digits, followed by two zeros, then a digit
+       * between 1 and 3.
+       */
+      function transactionComponent() {
+        var random = Math.random(),
+          order = ('0000000' + random.toString().slice(2)).slice(-7),
+          part = Math.ceil(random * 3).toString();
+
+        return order + '00' + part;
+      }
+    </script>
+  </body>
+</html>
